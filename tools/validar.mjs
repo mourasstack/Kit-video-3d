@@ -32,7 +32,8 @@ const TOL = 0.06;
 if (sb.versao !== 1) E('"versao" deve ser 1.');
 if (!sb.titulo) A('Falta "titulo".');
 const f = sb.formato || {};
-if (!num(f.largura) || !num(f.altura) || !num(f.fps)) E('"formato" precisa de largura, altura e fps (ex.: 1080, 1920, 30).');
+if (!num(f.largura) || !num(f.altura) || !num(f.fps)) E('"formato" precisa de largura, altura e fps (ex.: 1080, 1920, 60).');
+else if (f.fps < 60) A(`O padrão da criadora é 60 fps; este storyboard está em ${f.fps}. Use "fps": 60.`);
 else if (f.largura > f.altura) A('O formato está na horizontal; Shorts/Reels/TikTok são verticais (1080×1920).');
 // Método Desmontando: voltar no tempo depois de cada falha
 if (sb.rebobinar !== undefined) {

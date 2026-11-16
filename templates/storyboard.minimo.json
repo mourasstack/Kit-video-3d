@@ -1,7 +1,7 @@
 {
   "versao": 1,
   "titulo": "TÍTULO DO VÍDEO",
-  "formato": { "largura": 1080, "altura": 1920, "fps": 30 },
+  "formato": { "largura": 1080, "altura": 1920, "fps": 60 },
   "duracao": 10,
   "audio": "narracao.wav",
   "palavras": "palavras.json",

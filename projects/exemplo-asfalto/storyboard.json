@@ -4,7 +4,7 @@
   "formato": {
     "largura": 1080,
     "altura": 1920,
-    "fps": 30
+    "fps": 60
   },
   "duracao": 120.9,
   "audio": "narracao.wav",

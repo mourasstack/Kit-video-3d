@@ -52,8 +52,8 @@ pergunta final do kit (`estilo: "pergunta"`) continua valendo, curta.
 
 ## 5. Padrão audiovisual do CineCore
 
-- **60 fps reais quando der:** `"formato": { "largura": 1080, "altura": 1920, "fps": 60 }`
-  (o render demora ~2× mais). Se precisar ficar em 30, avisar.
+- **Sempre 60 fps reais:** `"formato": { "largura": 1080, "altura": 1920, "fps": 60 }` (padrão do kit;
+  o render demora ~2× mais que em 30). O validador avisa se estiver abaixo de 60. Só a prévia sai em 24.
 - Legenda palavra por palavra (o kit já faz); texto na tela nunca repete a legenda.
 - Celular/mensagens na tela: balões com rabiscos/linhas de texto, nunca balão vazio.
 - Duração: a que a história pedir; pode ser longo se estiver bem explicado.
