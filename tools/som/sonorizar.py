@@ -439,6 +439,18 @@ def main():
         for t, nome, preset, ov in eventos_personagens(sb):
             if t < 0 or t >= dur:
                 continue
+            grp = vozes.grupo(preset, ov)
+            gravados = vozes.arquivos(nome, grp)
+            if gravados:  # som gravado do banco (mais humano); varia entre as versões
+                arq = gravados[humanos % len(gravados)]
+                if arq not in cache:
+                    cache[arq] = normal(ler_wav(arq), 0.9)
+                base = 0.32 if nome in vozes.VOCAIS else {'passo': 0.1, 'martelada': 0.17, 'pazada': 0.15, 'gole': 0.15, 'palmas': 0.15}[nome]
+                somar(mix, cache[arq], t, base * (1 - (0.6 if nome in vozes.VOCAIS else 0.4) * fala[int(t * SR)]) * vol_s)
+                humanos += 1
+                continue
+            if som.get('sinteticosPersonagens', False) is not True and nome in vozes.VOCAIS:
+                continue  # vozinha sintética soa robótica: só entra se pedir "sinteticosPersonagens": true
             if nome in vozes.VOCAIS:
                 f0, k = vozes.timbre(preset, ov)
                 chave = (nome, f0, k)

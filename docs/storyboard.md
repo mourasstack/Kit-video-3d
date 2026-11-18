@@ -310,4 +310,5 @@ Os bonecos ganham **vozinhas de desenho animado** (sem palavras) e **sons do cor
 - O boneco que está com `talk` + `fala: true` não faz vozinha (a narração é a voz dele).
 - No máximo uma vozinha por boneco a cada 1,2 s.
 - Som pontual: no personagem, `"sons": [{ "em": 12.4, "som": "ai" }]`. Nomes: `oh`, `uau`, `hmm`, `ih`, `ai`, `risada`, `suspiro`, `ha`, `uhum`, `aa`, `esforco`, `vivas`, `passo`, `martelada`, `pazada`, `gole`, `palmas`.
+- **Sons gravados (mais humanos):** coloque os arquivos do ElevenLabs numa pasta com nomes `<grupo>_<som>.mp3` (grupo: `homem`, `mulher`, `crianca`, `corpo`) e rode `node tools/sons-bonecos.mjs <pasta>`. Eles entram no lugar dos sintéticos. Sem arquivo gravado, a vozinha fica de fora (a sintética, robótica, só com `"som": { "sinteticosPersonagens": true }`); passos e martelo usam o sintetizado.
 - Silenciar um boneco: `"mudo": true` no personagem. Desligar tudo: `"som": { "sonsPersonagens": false }`; só as vozinhas: `"som": { "vozesPersonagens": false }`.

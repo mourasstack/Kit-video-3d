@@ -216,3 +216,25 @@ EXPRESSAO_VOCAL = {'surprised': 'oh', 'worried': 'ih', 'sad': 'suspiro', 'thinki
 CLIPE_FOLEY = {'walk': ('passo', 0.5), 'run': ('passo', 0.3), 'hammer': ('martelada', 0.6), 'dig': ('pazada', 0.95),
                'beber': ('gole', 2.0), 'cheer': ('palmas', 9.0)}
 TODOS = VOCAIS + list(FOLEY)
+
+
+# ---------------- banco de sons gravados (ElevenLabs etc.) ----------------
+# Se existir assets/sons/bonecos/<grupo>/<nome>.wav (ou <nome>_1.wav, <nome>_2.wav… para variar),
+# ele é usado no lugar do som sintetizado. Grupos de voz: homem, mulher, crianca. Corpo: corpo/<nome>.wav.
+import os, glob
+BANCO = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'assets', 'sons', 'bonecos')
+GRUPO = {'homem': 'homem', 'construtor': 'homem', 'engenheiro': 'homem', 'servente': 'homem', 'motorista': 'homem',
+         'velhinho': 'homem', 'teo': 'homem', 'mulher': 'mulher', 'engenheira': 'mulher', 'velhinha': 'mulher',
+         'vovo': 'mulher', 'bia': 'mulher', 'crianca': 'crianca', 'menina': 'crianca'}
+
+
+def grupo(preset, overrides=None):
+    h = (overrides or {}).get('height')
+    if isinstance(h, (int, float)) and h < 0.8:
+        return 'crianca'
+    return GRUPO.get(preset or '', 'homem')
+
+
+def arquivos(nome, grp):
+    pasta = os.path.join(BANCO, 'corpo' if nome in FOLEY else grp)
+    return sorted(glob.glob(os.path.join(pasta, f'{nome}.wav')) + glob.glob(os.path.join(pasta, f'{nome}_*.wav')))
