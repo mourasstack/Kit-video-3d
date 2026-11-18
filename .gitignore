@@ -5,3 +5,4 @@ dist/
 projects/*/render/
 projects/_teste-voz/
 *.log
+__pycache__/
