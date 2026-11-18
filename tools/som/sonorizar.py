@@ -8,8 +8,11 @@ Uso: python sonorizar.py --storyboard storyboard.json --narracao narracao.wav --
      [--estilo animado|curioso|tenso] [--musica 1.0] [--sfx 1.0] [--sem-musica] [--sem-sfx]
 Só depende de numpy.
 """
-import argparse, json, wave
+import argparse, json, wave, os, sys
 import numpy as np
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import vozes  # sons humanos dos bonecos (vozinhas + passos, martelo, pá...)
 
 SR = 44100
 rng = np.random.default_rng(7)
@@ -317,6 +320,65 @@ def eventos(sb):
     return final
 
 
+def eventos_personagens(sb):
+    """Sons humanos dos bonecos: vozinhas nas reações e foley do corpo (passos, martelo, pá...).
+    Saída: lista de (t, nome, preset, overrides)."""
+    som = sb.get('som') or {}
+    if som.get('sonsPersonagens', True) is False:
+        return []
+    vozes_on = som.get('vozesPersonagens', True) is not False
+    ev = []
+    for c in sb.get('cenas', []):
+        a, b = c['inicio'], c['fim']
+        for p in c.get('personagens', []):
+            if p.get('mudo'):
+                continue
+            pid, preset, ov = p.get('id'), p.get('preset'), p.get('overrides') or {}
+            add = lambda t, nome: ev.append((t, nome, preset, ov, pid))
+            ultima_expr = None
+            for ac in sorted(p.get('acoes', []), key=lambda x: x.get('de', 0)):
+                clip, de, ate = ac.get('clip'), ac.get('de', a), ac.get('ate', b)
+                expr = ac.get('expressao')
+                fala = ac.get('fala') or clip == 'talk'
+                if vozes_on and not fala and a - 0.01 <= de < b - 0.2:
+                    nome = vozes.CLIPE_VOCAL.get(clip)
+                    if not nome and expr and expr != ultima_expr:
+                        nome = vozes.EXPRESSAO_VOCAL.get(expr)
+                    if nome:
+                        add(de + 0.05, nome)
+                ultima_expr = expr or ultima_expr
+                fol = vozes.CLIPE_FOLEY.get(clip)
+                if clip == 'carry' and (ac.get('params') or {}).get('walking', 1) == 0:
+                    fol = None
+                if fol:
+                    nome, passo = fol
+                    vel = float(ac.get('velocidade', 1) or 1)
+                    passo /= max(vel, 0.2)
+                    t = max(de, a) + (0.45 * passo if nome == 'martelada' else 0.1)
+                    while t < min(ate, b) - 0.05:
+                        add(t, nome); t += passo
+            for mv in p.get('movimentos', []):
+                clip, de, ate = mv.get('clip', 'walk'), mv.get('de', a), mv.get('ate', b)
+                passo = 0.3 if clip == 'run' else 0.5
+                t = max(de, a) + 0.1
+                while t < min(ate, b) - 0.05:
+                    add(t, 'passo'); t += passo
+            for x in p.get('sons', []) or []:
+                if x.get('som') in vozes.TODOS and x.get('em') is not None:
+                    add(float(x['em']), x['som'])
+    ev.sort(key=lambda e: e[0])
+    # uma vozinha por boneco a cada 1,2 s e no máximo uma vozinha geral a cada 0,6 s
+    final, ult_p, ult_g = [], {}, -9
+    for e in ev:
+        t, nome, _, _, pid = e
+        if nome in vozes.VOCAIS:
+            if t - ult_p.get(pid, -9) < 1.2 or t - ult_g < 0.6:
+                continue
+            ult_p[pid] = t; ult_g = t
+        final.append(e[:4])
+    return final
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--storyboard', required=True)
@@ -340,14 +402,14 @@ def main():
     voz = np.pad(voz, (0, max(0, n - len(voz))))[:n]
 
     mix = voz.copy()
+    # envelope da narração (janela de 60 ms, suavizado): abaixa música e sons dos bonecos na fala
+    jan = int(0.06 * SR)
+    e = np.sqrt(np.convolve(voz ** 2, np.ones(jan) / jan, mode='same'))
+    e = np.convolve(e, np.ones(int(0.25 * SR)) / int(0.25 * SR), mode='same')
+    fala = np.clip(e / (np.percentile(e, 90) * 0.5 + 1e-6), 0, 1)
     if not a.sem_musica and som.get('musica', True):
         m = musica(dur, estilo)[:n]
         m = np.pad(m, (0, n - len(m)))
-        # ducking: envelope da voz (janela de 60 ms, suavizado) abaixa a música na fala
-        jan = int(0.06 * SR)
-        e = np.sqrt(np.convolve(voz ** 2, np.ones(jan) / jan, mode='same'))
-        e = np.convolve(e, np.ones(int(0.25 * SR)) / int(0.25 * SR), mode='same')
-        fala = np.clip(e / (np.percentile(e, 90) * 0.5 + 1e-6), 0, 1)
         ganho = 0.16 - 0.08 * fala  # ~ -16 dB sob a voz, ~ -10 dB nas pausas
         mix += m * ganho * vol_m
     lista = []
@@ -369,12 +431,33 @@ def main():
                 sinal = rebobinar(float(r.get('duracao', 0.9)))
             somar(mix, sinal, max(0.0, t), g * vol_s)
             lista.append((round(t, 2), nome))
+    # sons humanos dos bonecos (vozinhas por baixo da narração, foley baixinho)
+    humanos = 0
+    if not a.sem_sfx and som.get('efeitos', True):
+        cache = {}
+        ganhos = {'passo': 0.08, 'martelada': 0.15, 'pazada': 0.13, 'gole': 0.14, 'palmas': 0.13}
+        for t, nome, preset, ov in eventos_personagens(sb):
+            if t < 0 or t >= dur:
+                continue
+            if nome in vozes.VOCAIS:
+                f0, k = vozes.timbre(preset, ov)
+                chave = (nome, f0, k)
+                if chave not in cache:
+                    cache[chave] = vozes.vocal(nome, f0, k)
+                g = 0.3 * (1 - 0.6 * fala[int(t * SR)])
+            else:
+                chave = (nome, len(cache) % 3) if nome == 'passo' else (nome,)
+                if chave not in cache:
+                    cache[chave] = vozes.FOLEY[nome]()
+                g = ganhos[nome] * (1 - 0.4 * fala[int(t * SR)])
+            somar(mix, cache[chave], t, g * vol_s)
+            humanos += 1
     # limitador suave
     pico = np.max(np.abs(mix))
     if pico > 0.98:
         mix = np.tanh(mix / pico * 1.2) / np.tanh(1.2) * 0.98
     gravar_wav(a.saida, mix)
-    print(json.dumps({'estilo': estilo, 'efeitos': len(lista), 'duracao': dur}))
+    print(json.dumps({'estilo': estilo, 'efeitos': len(lista), 'sonsBonecos': humanos, 'duracao': dur}))
 
 
 if __name__ == '__main__':

@@ -45,6 +45,11 @@ if (sb.rebobinar !== undefined) {
   });
 }
 if (num(sb.duracao) && sb.duracao >= 40 && !(sb.rebobinar || []).length) A('Método Desmontando: nenhum "rebobinar". Cada ciclo falha → volta no tempo (⏪) → solução; veja docs/metodo-desmontando.md.');
+const SONS_BONECOS = ['oh', 'uau', 'hmm', 'ih', 'ai', 'risada', 'suspiro', 'ha', 'uhum', 'aa', 'esforco', 'vivas', 'passo', 'martelada', 'pazada', 'gole', 'palmas'];
+(sb.cenas || []).forEach((c, ci) => (c.personagens || []).forEach((p) => (p.sons || []).forEach((x) => {
+  if (!SONS_BONECOS.includes(x.som)) E(`cena ${ci + 1}, ${p.id}: som "${x.som}" não existe. Use: ${SONS_BONECOS.join(', ')}.`);
+  if (!num(x.em)) E(`cena ${ci + 1}, ${p.id}: "sons" precisa de "em" (segundos).`);
+})));
 if (sb.estiloPersonagens && !['redondo', 'lowpoly'].includes(sb.estiloPersonagens)) E('"estiloPersonagens" deve ser "redondo" (padrão, estilo CineCore) ou "lowpoly".');
 if (!num(sb.duracao) || sb.duracao <= 0) E('"duracao" deve ser um número de segundos > 0.');
 else if (sb.duracao > 180) A(`Duração de ${sb.duracao}s: Shorts vão até 3 min, e vídeos longos perdem retenção.`);

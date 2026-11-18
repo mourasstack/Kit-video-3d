@@ -75,6 +75,7 @@ Duração: a que a construção pedir (a referência tem ~2 min 50 s com 10 cicl
 | Etiqueta / seta | clique |
 | Peça aparecendo | pop |
 | Troca de cena | whoosh |
+| Reações dos bonecos | vozinhas ("oh!", "ih…", "uau!", "hmm", risadinha, "êêê!") e sons do corpo (passos, martelada, pá) — automáticos pelas expressões e animações |
 | Fundo | música leve, abaixando sob a voz |
 
 ## 5. Como montar no storyboard (receitas)

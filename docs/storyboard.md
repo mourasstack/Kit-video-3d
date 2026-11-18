@@ -294,3 +294,20 @@ Para ver no navegador com controles: `npm run preview` e abra `http://localhost:
 | `realce: { de, ate, cor }` (ou lista) | objeto ou personagem | a peça acende pulsando na cor (padrão amarelo `#ffd60a`; problema: `#ff3b30`). Som "brilho". |
 | `efeitos: [{ "tipo": "desaba", de, ate, intensidade }]` | cena | treme a imagem como `tremor` e toca o estrondo de desabamento. |
 | `legendas.termos: ["viga baldrame", …]` | raiz | palavras extras que saem em amarelo na legenda (todo `termo` dos elementos já entra sozinho). |
+
+
+## Sons humanos dos bonecos (automático no `sonorizar`)
+
+Os bonecos ganham **vozinhas de desenho animado** (sem palavras) e **sons do corpo**, sintetizados (livres de direitos), cada um com o timbre do seu preset (criança fina, homem grave, Bia/Vovó médias…). A narração continua sendo a voz principal: as vozinhas ficam por baixo e abaixam quando a narração fala.
+
+| Quando | Som |
+|---|---|
+| `expressao`: `surprised` / `worried` / `sad` / `thinking` / `laugh` / `angry` / `sleepy` / `happy` | "oh!" / "ih…" / suspiro / "hmm" / risadinha / "ã-ã" / suspiro / "uau!" |
+| clipe `cheer` / `surprised` / `think` / `shrug` e `look_around` / `nod` / `shake_head` / `push` e `carry` / `laugh` | "êêê!" + palmas / "oh!" / "hmm" / "hã?" / "uhum" / "ã-ã" / esforço "hnf!" / risadinha |
+| `walk`, `run` e `movimentos` | passos no ritmo da passada |
+| `hammer` / `dig` / `beber` | martelada / pá na terra / goles |
+
+- O boneco que está com `talk` + `fala: true` não faz vozinha (a narração é a voz dele).
+- No máximo uma vozinha por boneco a cada 1,2 s.
+- Som pontual: no personagem, `"sons": [{ "em": 12.4, "som": "ai" }]`. Nomes: `oh`, `uau`, `hmm`, `ih`, `ai`, `risada`, `suspiro`, `ha`, `uhum`, `aa`, `esforco`, `vivas`, `passo`, `martelada`, `pazada`, `gole`, `palmas`.
+- Silenciar um boneco: `"mudo": true` no personagem. Desligar tudo: `"som": { "sonsPersonagens": false }`; só as vozinhas: `"som": { "vozesPersonagens": false }`.
