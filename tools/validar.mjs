@@ -50,6 +50,16 @@ const SONS_BONECOS = ['oh', 'uau', 'hmm', 'ih', 'ai', 'risada', 'suspiro', 'ha',
   if (!SONS_BONECOS.includes(x.som)) E(`cena ${ci + 1}, ${p.id}: som "${x.som}" não existe. Use: ${SONS_BONECOS.join(', ')}.`);
   if (!num(x.em)) E(`cena ${ci + 1}, ${p.id}: "sons" precisa de "em" (segundos).`);
 })));
+// Regra da criadora: nenhum vídeo passa de 2 minutos
+{
+  const narr = path.join(pasta, 'narracao.txt');
+  if (fs.existsSync(narr)) {
+    const n = fs.readFileSync(narr, 'utf8').split(/\s+/).filter(Boolean).length;
+    if (n > 330) E(`A narração tem ${n} palavras; para caber em 2 minutos use no máximo ~300.`);
+    else if (n > 300) A(`A narração tem ${n} palavras; perto do limite de 2 minutos (~300).`);
+  }
+}
+if (num(sb.duracao) && sb.duracao > 120) E(`O vídeo tem ${sb.duracao.toFixed(1)} s; o limite é 2 minutos (120 s). Encurte a narração (máx. ~300 palavras) e junte ciclos.`);
 if (sb.estiloPersonagens && !['redondo', 'lowpoly'].includes(sb.estiloPersonagens)) E('"estiloPersonagens" deve ser "redondo" (padrão, estilo CineCore) ou "lowpoly".');
 if (!num(sb.duracao) || sb.duracao <= 0) E('"duracao" deve ser um número de segundos > 0.');
 else if (sb.duracao > 180) A(`Duração de ${sb.duracao}s: Shorts vão até 3 min, e vídeos longos perdem retenção.`);

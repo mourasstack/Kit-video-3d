@@ -19,7 +19,7 @@ Narração sempre em **segunda pessoa** ("você levanta", "você cava"), frases 
 "Se você [faz o óbvio], você não vai ter [o resultado]. Vai ter [o desastre]."
 Na tela: você faz o óbvio **acelerado (⏩)** e o desastre acontece. Tema claro na 1ª frase.
 
-**Ciclo (repete 8–12 vezes, 10–20 s cada):**
+**Ciclo (repete 6–8 vezes, 10–14 s cada):**
 
 | Passo | Fala (molde) | Tela |
 | --- | --- | --- |
@@ -46,7 +46,10 @@ comente '[palavra 2]'."** (no vídeo: "pedreiro" / "servente"). Na tela: o texto
 no alto ("SABIA? COMENTE "PEDREIRO"" / "NÃO SABIA? COMENTE "SERVENTE""), aparecendo em sincronia
 com a fala. Fechamento com o nome do canal / mascote acenando.
 
-Duração: a que a construção pedir (a referência tem ~2 min 50 s com 10 ciclos). Pode ser longo.
+**Duração: NUNCA mais de 2 minutos (120 s), regra da criadora.** Alvo de 90–115 s.
+Narração com **no máximo ~300 palavras** (≈ 2,6 palavras por segundo). Se o tema pede mais etapas,
+junte etapas parecidas num ciclo só, corte as pontes "É por isso que…" menos fortes e acelere o
+acabamento — nunca estoure os 2 minutos. (A referência tem 2 min 50 s; o nosso padrão é mais curto.)
 
 ## 3. Explicação visual
 
@@ -105,7 +108,8 @@ cada frase é falada.
 ## 6. Checklist do método (antes de aprovar o roteiro e antes do render)
 
 - [ ] Abertura: tentativa ingênua acelerada + desastre nos primeiros ~5 s; tema na 1ª frase.
-- [ ] 8–12 ciclos "Mas… → ⏪ → Então você… → Essa é a…".
+- [ ] 6–8 ciclos "Mas… → ⏪ → Então você… → Essa é a…".
+- [ ] Vídeo com **no máximo 2 min (120 s)** e narração com no máximo ~300 palavras.
 - [ ] Toda falha aparece fisicamente; todo ciclo de falha tem `rebobinar`.
 - [ ] Todo nome técnico: peça acende em amarelo + `termo` + palavra amarela na legenda.
 - [ ] Pontes "É por isso que…" com o defeito real em pelo menos metade dos ciclos.

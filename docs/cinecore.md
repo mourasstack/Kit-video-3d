@@ -56,7 +56,7 @@ pergunta final do kit (`estilo: "pergunta"`) continua valendo, curta.
   o render demora ~2× mais que em 30). O validador avisa se estiver abaixo de 60. Só a prévia sai em 24.
 - Legenda palavra por palavra (o kit já faz); texto na tela nunca repete a legenda.
 - Celular/mensagens na tela: balões com rabiscos/linhas de texto, nunca balão vazio.
-- Duração: a que a história pedir; pode ser longo se estiver bem explicado.
+- **Duração: no máximo 2 minutos (120 s)**, alvo de 90–115 s; narração com no máximo ~300 palavras.
 - Música de fundo + efeitos sonoros sempre (`tools/sonorizar.mjs`).
 
 ## 6. Fluxo com portões (como a criadora prefere)
