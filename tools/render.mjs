@@ -7,7 +7,7 @@
 //   node tools/render.mjs projects/<nome> --de 10 --ate 20  → só um trecho
 //   node tools/render.mjs projects/<nome> --tempos 1.5,7,12 → PNGs nesses instantes em render/quadros/
 //   node tools/render.mjs projects/<nome> --capa 12.3 --sem-legenda → capa sem a palavra da legenda
-//   opções: --cpu (força renderização por software), --saida arquivo.mp4
+//   opções: --cpu (força renderização por software), --saida arquivo.mp4, --sem-audio (só imagem; usado no modo equipe)
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -131,8 +131,8 @@ try {
 
   // vídeo completo (ou trecho)
   const audioArq = sb.audio ? path.join(pasta, sb.audio) : null;
-  const temAudio = audioArq && fs.existsSync(audioArq);
-  if (sb.audio && !temAudio) console.warn(`Aviso: áudio "${sb.audio}" não encontrado; o vídeo sai mudo.`);
+  const temAudio = !flag('sem-audio') && audioArq && fs.existsSync(audioArq);
+  if (sb.audio && !temAudio && !flag('sem-audio')) console.warn(`Aviso: áudio "${sb.audio}" não encontrado; o vídeo sai mudo.`);
   const saida = valor('saida') || path.join(saidaDir, previa ? 'previa.mp4' : 'video.mp4');
   const total = Math.round((ate - de) * fps);
   const ff = spawn('ffmpeg', [

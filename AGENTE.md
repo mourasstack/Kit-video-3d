@@ -36,6 +36,7 @@ Regras de conduta (valem sempre):
 | `docs/processos.md` | **obrigatório**: como mostrar qualquer processo em animação (plano de animação, vocabulário visual, receitas) |
 | `docs/postagem.md` | capa, título, descrição, comentário fixado |
 | `docs/metodo-desmontando.md` | **obrigatório**: o método de roteiro, explicação visual, voltar no tempo e sons (vídeo de referência) |
+| `docs/equipe.md` | **modo equipe**: vários chats renderizam o mesmo vídeo ao mesmo tempo (divide em trechos e junta) |
 | `docs/cinecore.md` | **obrigatório**: integração CineCore — personagens redondos, regra do primeiro segundo, padrão audiovisual e portões |
 | `docs/estilo-referencia.md` | **leia antes do roteiro**: o estilo de referência (corrente problema → solução → nome, objeto montado do zero, termo/painel/tela dividida) |
 | `config/canal.json` | identidade do canal (criada na primeira vez) |
@@ -159,6 +160,7 @@ node tools/render.mjs projects/<nome>            # final 1080×1920
 node tools/render.mjs projects/<nome> --capa 1.2 --sem-legenda # capa em PNG (sem a palavra da legenda)
 node tools/render.mjs projects/<nome> --tempos 3,9.5,20 # quadros nos instantes que você quer conferir
 node tools/sonorizar.mjs projects/<nome> --video render/video.mp4 # música + efeitos → render/video-final.mp4
+node tools/equipe.mjs dividir|convite|renderizar|status|juntar projects/<nome> # modo equipe (vários chats)
 npm run preview                                  # ver assets e o player no navegador
 npm run check                                    # testa o pack todo
 ```
